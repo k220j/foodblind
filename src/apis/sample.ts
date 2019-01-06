@@ -1,9 +1,25 @@
-const ROOT_URL = 'http://localhost:3000/api';
+const axios = require('axios');
+const ROOT_URL = 'http://localhost:3000';
 
-export const sample = async (body: object, signal?: AbortController['signal']) => {
+export const getUserList = async () => {
+    let res: any = await fetch(`${ROOT_URL}/posts`, {
+        method: 'GET',
+        headers: new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }),
+    });
+
+    if (res) {
+        res = JSON.parse(res._bodyInit);
+        return res;
+    }
+    return null;
+}
+
+export const sample = async (body: object) => {
   try {
     let res: any = await fetch(`${ROOT_URL}/sample`, {
-      signal,
       method: 'POST',
       headers: new Headers({
         'Accept': 'application/json',
