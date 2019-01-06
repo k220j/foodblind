@@ -4,10 +4,9 @@ import {
     Text,
     View,
     FlatList,
+    TextInput,
+    TouchableOpacity,
 } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
-
-
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
 import { getUserList } from '../../apis/sample';
@@ -55,6 +54,16 @@ class Page extends Component<IProps, IState> {
         });
     }
 
+    public handleTitle = (text) => {
+        this.setState({ title: text });
+    }
+    public handleContent = (text) => {
+        this.setState({ content: text })
+    }
+    public login = (email, pass) => {
+        alert('email: ' + email + ' password: ' + pass);
+    }
+
     public addPost() {
         this.setState({
             isLoggingIn: false,
@@ -95,12 +104,27 @@ class Page extends Component<IProps, IState> {
 
     public onCreate() {
         return (
-          <View>
-              <FormLabel>title</FormLabel>
-              <FormInput/>
-              <FormLabel>content</FormLabel>
-              <FormInput/>
-          </View>
+            <View style={styles.formContainer}>
+                <TextInput style={styles.input}
+                           underlineColorAndroid="transparent"
+                           placeholder="title"
+                           placeholderTextColor="#9a73ef"
+                           autoCapitalize="none"
+                           onChangeText={this.handleTitle}/>
+                <TextInput style={styles.input}
+                           underlineColorAndroid="transparent"
+                           placeholder="Content"
+                           placeholderTextColor="#9a73ef"
+                           autoCapitalize="none"
+                           onChangeText={this.handleContent}/>
+                <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={
+                        () => this.login(this.state.email, this.state.password)
+                    }>
+                    <Text style={styles.submitButtonText}> Submit </Text>
+                </TouchableOpacity>
+            </View>
         );
 
     }
@@ -124,43 +148,23 @@ const styles: any = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    titleTxt: {
-        marginTop: 100,
-        color: colors.dusk,
-        fontSize: 24,
+    formContainer: {
+        paddingTop: 23,
     },
-    txtLogin: {
-        fontSize: 14,
+    input: {
+        margin: 15,
+        height: 40,
+        borderColor: '#7a42f4',
+        borderWidth: 1,
+    },
+    submitButton: {
+        backgroundColor: '#7a42f4',
+        padding: 10,
+        margin: 15,
+        height: 40,
+    },
+    submitButtonText: {
         color: 'white',
-    },
-    imgBtn: {
-        width: 24,
-        height: 24,
-        position: 'absolute',
-        left: 16,
-    },
-    viewUser: {
-        marginTop: 60,
-        alignItems: 'center',
-    },
-    txtUser: {
-        fontSize: 16,
-        color: colors.dusk,
-        lineHeight: 48,
-    },
-    btnBottomWrapper: {
-        position: 'absolute',
-        bottom: 40,
-    },
-    btnLogin: {
-        backgroundColor: colors.dodgerBlue,
-        alignSelf: 'center',
-        borderRadius: 4,
-        width: 320,
-        height: 52,
-
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     btnNavigate: {
         backgroundColor: 'white',
