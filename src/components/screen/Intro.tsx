@@ -1,29 +1,121 @@
 import React, {Component} from 'react';
 import {
-    Platform,
-    StatusBar,
     StyleSheet,
-    TouchableHighlight,
-    TouchableOpacity,
-    Image,
-    ScrollView,
     Text,
     View,
     FlatList,
-    InteractionManager,
 } from 'react-native';
-import { List, ListItem } from 'react-native-elements'
+import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 
-import {observable} from 'mobx';
-import {observer} from 'mobx-react';
-import {inject} from 'mobx-react/native';
-import {getUserList} from '../../apis/sample';
 
-import {ratio, colors} from '../../utils/Styles';
-import {IC_MASK} from '../../utils/Icons';
-import User from '../../models/User';
-import {getString} from '../../../STRINGS';
+import { observer } from 'mobx-react';
+import { inject } from 'mobx-react/native';
+import { getUserList } from '../../apis/sample';
 import Button from '../shared/Button';
+
+import { colors } from '../../utils/Styles';
+
+export const SCENE = {
+    CREATE : 1,
+    UPDATE : 2,
+    DELETE : 3,
+    ALL : 4,
+};
+
+interface IProps {
+    navigation?: any;
+    store: any;
+}
+
+interface IState {
+    isLoggingIn: boolean;
+    loading: boolean;
+    data: any;
+    scene: number;
+}
+
+@inject('store') @observer
+class Page extends Component<IProps, IState> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            scene: SCENE.ALL,
+            isLoggingIn: false,
+            loading: true,
+            data: [],
+        };
+    }
+
+    public async componentDidMount() {
+        const list: any = await getUserList();
+        this.setState({
+            isLoggingIn: false,
+            loading: false,
+            data: list,
+        });
+    }
+
+    public addPost() {
+        this.setState({
+            isLoggingIn: false,
+            loading: false,
+            data: [],
+            scene: SCENE.CREATE,
+        });
+    }
+
+    public showAll() {
+       return <View style={styles.container}>
+                <FlatList
+                    data={this.state.data}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item}) =>
+                        <View style={styles.flatview}>
+                            <Text style={styles.name}>{item.id}</Text>
+                            <Text style={styles.name}>{item.title}</Text>
+                            <Text style={styles.content}>{item.content}</Text>
+                        </View>
+                    }
+                    keyExtractor={item => item.id}
+                />
+                <Button
+                onPress={() => this.addPost() }
+                style={[
+                    styles.btnNavigate,
+                    {
+                        marginTop: 15,
+                    },
+                ]}
+                textStyle={{
+                    color: colors.dodgerBlue,
+                }}
+            >내용 추가하기</Button>
+        </View>;
+    }
+
+    public onCreate() {
+        return (
+          <View>
+              <FormLabel>title</FormLabel>
+              <FormInput/>
+              <FormLabel>content</FormLabel>
+              <FormInput/>
+          </View>
+        );
+
+    }
+
+    public render() {
+        switch (this.state.scene) {
+            case SCENE.ALL:
+                return this.showAll();
+            case SCENE.CREATE:
+                return this.onCreate();
+            default:
+                return this.onCreate();
+        }
+    }
+}
 
 const styles: any = StyleSheet.create({
     container: {
@@ -93,57 +185,5 @@ const styles: any = StyleSheet.create({
         borderRadius: 2,
     },
 });
-
-interface IProps {
-    navigation?: any;
-    store: any;
-}
-
-interface IState {
-    isLoggingIn: boolean;
-    loading: boolean;
-    data: any;
-}
-
-@inject('store') @observer
-class Page extends Component<IProps, IState> {
-    private timer: any;
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoggingIn: false,
-            loading: true,
-            data: [],
-        };
-    }
-
-    public async componentDidMount() {
-        const list: any = await getUserList();
-        this.setState({
-            isLoggingIn: false,
-            loading: false,
-            data: list,
-        });
-    }
-
-    public render() {
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={this.state.data}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({item}) =>
-                        <View style={styles.flatview}>
-                            <Text style={styles.name}>{item.title}</Text>
-                            <Text style={styles.email}>{item.content}</Text>
-                        </View>
-                    }
-                    keyExtractor={item => item.id}
-                />
-            </View>
-        );
-    }
-}
 
 export default Page;
