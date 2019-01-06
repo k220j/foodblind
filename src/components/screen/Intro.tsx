@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
-import { getUserList } from '../../apis/sample';
+import { getUserList, addUser } from '../../apis/sample';
 import Button from '../shared/Button';
 
 import { colors } from '../../utils/Styles';
@@ -55,13 +55,13 @@ class Page extends Component<IProps, IState> {
     }
 
     public handleTitle = (text) => {
-        this.setState({ title: text });
+        this.setState({title: text});
     }
     public handleContent = (text) => {
-        this.setState({ content: text })
+        this.setState({ content: text });
     }
-    public login = (email, pass) => {
-        alert('email: ' + email + ' password: ' + pass);
+    public add = (title, content) => {
+        addUser(title, content);
     }
 
     public addPost() {
@@ -120,9 +120,9 @@ class Page extends Component<IProps, IState> {
                 <TouchableOpacity
                     style={styles.submitButton}
                     onPress={
-                        () => this.login(this.state.email, this.state.password)
+                        () => this.add(this.state.title, this.state.content)
                     }>
-                    <Text style={styles.submitButtonText}> Submit </Text>
+                    <Text style={styles.submitButtonText}> 만들기 </Text>
                 </TouchableOpacity>
             </View>
         );

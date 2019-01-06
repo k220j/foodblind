@@ -17,6 +17,32 @@ export const getUserList = async () => {
     return null;
 }
 
+export const addUser = async (title, content) => {
+    const params = {title, content};
+    let res: any = await fetch(`${ROOT_URL}/posts`, {
+        method: 'POST',
+        headers: new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }),
+        body: JSON.stringify(params),
+    });
+
+    if (res) {
+        res = JSON.parse(res._bodyInit);
+        return res;
+    }
+    return null;
+}
+
+// export const addUser = async (title, content) => {
+//     axios.post('/posts', { title, content })
+//     .then((res) => {
+//         console.log(res);
+//     });
+//     return null;
+// }
+
 export const sample = async (body: object) => {
   try {
     let res: any = await fetch(`${ROOT_URL}/sample`, {
