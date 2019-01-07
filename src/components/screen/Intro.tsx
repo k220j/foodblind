@@ -12,8 +12,22 @@ import { inject } from 'mobx-react/native';
 import { getUserList, addUser } from '../../apis/sample';
 import Button from '../shared/Button';
 
-import { colors } from '../../utils/Styles';
+import { ratio, colors } from '../../utils/Styles';
+import { IC_MASK } from '../../utils/Icons';
+import { getString } from '../../../STRINGS';
+import { BottomNavigation, COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
 
+const uiTheme = {
+    palette: {
+      primaryColor: COLOR.green500,
+    },
+    toolbar: {
+      container: {
+        height: 50,
+      },
+    },
+  };
+  
 export const SCENE = {
     CREATE : 1,
     UPDATE : 2,
@@ -74,32 +88,32 @@ class Page extends Component<IProps, IState> {
     }
 
     public showAll() {
-       return <View style={styles.container}>
-                <FlatList
-                    data={this.state.data}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({item}) =>
-                        <View style={styles.flatview}>
-                            <Text style={styles.name}>{item.id}</Text>
-                            <Text style={styles.name}>{item.title}</Text>
-                            <Text style={styles.content}>{item.content}</Text>
-                        </View>
-                    }
-                    keyExtractor={item => item.id}
-                />
-                <Button
-                onPress={() => this.addPost() }
-                style={[
-                    styles.btnNavigate,
-                    {
-                        marginTop: 15,
-                    },
-                ]}
-                textStyle={{
-                    color: colors.dodgerBlue,
-                }}
-            >내용 추가하기</Button>
-        </View>;
+        return <View style={styles.container}>
+            <FlatList
+                data={this.state.data}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item}) =>
+                    <View style={styles.flatview}>
+                        <Text style={styles.name}>{item.id}</Text>
+                        <Text style={styles.name}>{item.title}</Text>
+                        <Text style={styles.content}>{item.content}</Text>
+                    </View>
+                }
+                keyExtractor={item => item.id}
+            />
+            <Button
+            onPress={() => this.addPost() }
+            style={[
+                styles.btnNavigate,
+                {
+                    marginTop: 15,
+                },
+            ]}
+            textStyle={{
+                color: colors.dodgerBlue,
+            }}
+        ><Text>내용 추가하기</Text></Button>
+    </View>;
     }
 
     public onCreate() {
@@ -136,7 +150,45 @@ class Page extends Component<IProps, IState> {
             case SCENE.CREATE:
                 return this.onCreate();
             default:
-                return this.onCreate();
+                return (
+                    <ThemeContext.Provider value={getTheme(uiTheme)}>
+                    <BottomNavigation style={styles.navbar}  hidden={false} >
+                        <BottomNavigation.Action
+                        key="login"
+                        label="login"
+                        isLoading={this.state.isLoggingIn}
+                        style={styles.btnLogin}
+                        textStyle={styles.txtLogin}
+                        imgLeftSrc={IC_MASK}
+                        imgLeftStyle={styles.imgBtn}
+                        text={getString('LOGIN')}
+                        />
+                        <BottomNavigation.Action
+                        key="navigate"
+                        label="navigate"
+                        onPress={() => this.props.navigation.navigate('NotFound') }
+                        style={[
+                            styles.btnNavigate,
+                            {
+                            marginTop: 15,
+                            },
+                        ]}
+                        textStyle={{
+                            color: colors.dodgerBlue,
+                        }}
+                        text="Navigate"
+                        />
+                        <BottomNavigation.Action
+                            key="bookmark-border"
+                            label="Bookmark"
+                        />
+                        <BottomNavigation.Action
+                            key="settings"
+                            label="Settings"
+                        />
+                    </BottomNavigation>
+                </ThemeContext.Provider>
+                )
         }
     }
 }
