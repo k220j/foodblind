@@ -88,49 +88,85 @@ class Page extends Component<IProps, IState> {
     }
 
     public showAll() {
-        return <View style={styles.container}>
-            <FlatList
-                data={this.state.data}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item}) =>
-                    <View style={styles.flatview}>
-                        <Text style={styles.name}>{item.id}</Text>
-                        <Text style={styles.name}>{item.title}</Text>
-                        <Text style={styles.content}>{item.content}</Text>
-                    </View>
-                }
-                keyExtractor={item => item.id}
-            />
-            <Button
-            onPress={() => this.addPost() }
-            style={[
-                styles.btnNavigate,
-                {
-                    marginTop: 15,
-                },
-            ]}
-            textStyle={{
-                color: colors.dodgerBlue,
-            }}
-        ><Text>내용 추가하기</Text></Button>
-    </View>;
+        return (
+            <ThemeContext.Provider value={getTheme(uiTheme)}>
+                <View style={styles.container}>
+                    <FlatList
+                        data={this.state.data}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({item}) =>
+                            <View style={styles.flatview}>
+                                <Text style={styles.name}>{item.id}</Text>
+                                <Text style={styles.name}>{item.title}</Text>
+                                <Text style={styles.content}>{item.content}</Text>
+                            </View>
+                        }
+                        keyExtractor={item => item.id}
+                    />
+                    <Button
+                    onPress={() => this.addPost() }
+                    style={[
+                        styles.btnNavigate,
+                        {
+                            marginTop: 15,
+                        },
+                    ]}
+                    textStyle={{
+                        color: colors.dodgerBlue,
+                    }}
+                >내용 추가하기</Button>
+                </View>
+                <BottomNavigation style={styles.navbar}  hidden={false} >
+                    <BottomNavigation.Action
+                    key="login"
+                    label="login"
+                    icon='people'
+                    isLoading={this.state.isLoggingIn}
+                    style={styles.btnLogin}
+                    textStyle={styles.txtLogin}
+                    imgLeftSrc={IC_MASK}
+                    imgLeftStyle={styles.imgBtn}
+                    text={getString('LOGIN')}
+                    />
+                    <BottomNavigation.Action
+                    key="navigate"
+                    icon='people'
+                    label="navigate"
+                    />
+                    <BottomNavigation.Action
+                    key="add"
+                    icon="add"
+                    />
+                    <BottomNavigation.Action
+                        key="bookmark-border"
+                        icon="bookmark-border"
+                        label="Bookmark"
+                    />
+                    <BottomNavigation.Action
+                        key="settings"
+                        icon="settings"
+                        label="Settings"
+                    />
+                </BottomNavigation>
+            </ThemeContext.Provider>
+        )
     }
 
     public onCreate() {
         return (
             <View style={styles.formContainer}>
                 <TextInput style={styles.input}
-                           underlineColorAndroid="transparent"
-                           placeholder="title"
-                           placeholderTextColor="#9a73ef"
-                           autoCapitalize="none"
-                           onChangeText={this.handleTitle}/>
+                        underlineColorAndroid="transparent"
+                        placeholder="title"
+                        placeholderTextColor="#9a73ef"
+                        autoCapitalize="none"
+                        onChangeText={this.handleTitle}/>
                 <TextInput style={styles.input}
-                           underlineColorAndroid="transparent"
-                           placeholder="Content"
-                           placeholderTextColor="#9a73ef"
-                           autoCapitalize="none"
-                           onChangeText={this.handleContent}/>
+                            underlineColorAndroid="transparent"
+                            placeholder="Content"
+                            placeholderTextColor="#9a73ef"
+                            autoCapitalize="none"
+                            onChangeText={this.handleContent}/>
                 <TouchableOpacity
                     style={styles.submitButton}
                     onPress={
@@ -150,45 +186,7 @@ class Page extends Component<IProps, IState> {
             case SCENE.CREATE:
                 return this.onCreate();
             default:
-                return (
-                    <ThemeContext.Provider value={getTheme(uiTheme)}>
-                    <BottomNavigation style={styles.navbar}  hidden={false} >
-                        <BottomNavigation.Action
-                        key="login"
-                        label="login"
-                        isLoading={this.state.isLoggingIn}
-                        style={styles.btnLogin}
-                        textStyle={styles.txtLogin}
-                        imgLeftSrc={IC_MASK}
-                        imgLeftStyle={styles.imgBtn}
-                        text={getString('LOGIN')}
-                        />
-                        <BottomNavigation.Action
-                        key="navigate"
-                        label="navigate"
-                        onPress={() => this.props.navigation.navigate('NotFound') }
-                        style={[
-                            styles.btnNavigate,
-                            {
-                            marginTop: 15,
-                            },
-                        ]}
-                        textStyle={{
-                            color: colors.dodgerBlue,
-                        }}
-                        text="Navigate"
-                        />
-                        <BottomNavigation.Action
-                            key="bookmark-border"
-                            label="Bookmark"
-                        />
-                        <BottomNavigation.Action
-                            key="settings"
-                            label="Settings"
-                        />
-                    </BottomNavigation>
-                </ThemeContext.Provider>
-                )
+                return this.onCreate();
         }
     }
 }
