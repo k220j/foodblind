@@ -103,24 +103,11 @@ class Page extends Component<IProps, IState> {
                         }
                         keyExtractor={item => item.id}
                     />
-                    <Button
-                    onPress={() => this.addPost() }
-                    style={[
-                        styles.btnNavigate,
-                        {
-                            marginTop: 15,
-                        },
-                    ]}
-                    textStyle={{
-                        color: colors.dodgerBlue,
-                    }}
-                >내용 추가하기</Button>
                 </View>
                 <BottomNavigation style={styles.navbar}  hidden={false} >
                     <BottomNavigation.Action
-                    key="login"
-                    label="login"
-                    icon='people'
+                    key="home"
+                    icon='home'
                     isLoading={this.state.isLoggingIn}
                     style={styles.btnLogin}
                     textStyle={styles.txtLogin}
@@ -129,23 +116,21 @@ class Page extends Component<IProps, IState> {
                     text={getString('LOGIN')}
                     />
                     <BottomNavigation.Action
-                    key="navigate"
-                    icon='people'
-                    label="navigate"
+                    key="search"
+                    icon='search'
                     />
                     <BottomNavigation.Action
                     key="add"
                     icon="add"
-                    />
-                    <BottomNavigation.Action
-                        key="bookmark-border"
-                        icon="bookmark-border"
-                        label="Bookmark"
+                    onPress={() => this.addPost() }
                     />
                     <BottomNavigation.Action
                         key="settings"
                         icon="settings"
-                        label="Settings"
+                    />
+                    <BottomNavigation.Action
+                        key="account"
+                        icon="favorite"
                     />
                 </BottomNavigation>
             </ThemeContext.Provider>
