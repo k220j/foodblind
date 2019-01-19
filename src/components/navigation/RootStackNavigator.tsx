@@ -1,12 +1,23 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { observer } from 'mobx-react/native';
+import { AsyncStorage } from 'react-native'
 
 import { colors } from '../../utils/Styles';
-import appStore from '../../stores/appStore';
 import IntroScreen from '../screen/Intro';
 import NotFoundScreen from '../screen/NotFound';
 
+async function isLogin() {
+    const isLogin = await AsyncStorage.getItem("isLogin");
+    if ( isLogin === 'true' ) {
+        return 'Intro';
+    } else {
+        return 'SignUp';
+    }
+}
+
+
+const initialRouteName = isLogin();
 const routeConfig = {
   Intro: {
     screen: IntroScreen,
@@ -23,8 +34,6 @@ const routeConfig = {
 
 const navigatorConfig = {
   initialRouteName: 'Intro',
-  // header: null,
-  // headerMode: 'none',
   gesturesEnabled: true,
   statusBarStyle: 'light-content',
   navigationOptions: {
@@ -40,7 +49,8 @@ const navigatorConfig = {
   },
 };
 
-const RootStackNavigator = createStackNavigator(routeConfig, navigatorConfig);
+const AppStackNavigator = createStackNavigator(routeConfig, navigatorConfig);
+// const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
 interface IProps {
   navigation: any;
@@ -48,10 +58,10 @@ interface IProps {
 
 @observer
 class RootNavigator extends React.Component<IProps> {
-  private static router = RootStackNavigator.router;
+  private static router = AppStackNavigator.router;
 
   public render() {
-    return <RootStackNavigator navigation={this.props.navigation}/>;
+    return <AppStackNavigator navigation={this.props.navigation}/>;
   }
 }
 

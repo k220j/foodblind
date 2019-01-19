@@ -1,8 +1,8 @@
 {
-  "name": "dooboo",
+  "name": "schoolind",
   "version": "0.0.1",
-  "description": "boilerplate for react-native by dooboolab!",
-  "author": "hyochan <dooboolab@gmail.com>",
+  "description": "스쿨라인드 개발팀",
+  "author": "schoolind <70hojung@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "node node_modules/react-native/local-cli/cli.js start",
@@ -46,7 +46,8 @@
     "react-navigation": "^3.0.8",
     "lodash": "4.17.11",
     "axios": "0.18.0",
-    "react-native-elements": "0.19.1"
+    "react-native-camera": "1.8.0",
+    "react-native-image-picker": "0.28.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

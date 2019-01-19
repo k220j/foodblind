@@ -6,16 +6,17 @@ import {
     FlatList,
     TextInput,
     TouchableOpacity,
+    CameraRoll,
+    Image,
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
 import { getUserList, addUser } from '../../apis/sample';
-import Button from '../shared/Button';
-
 import { ratio, colors } from '../../utils/Styles';
 import { IC_MASK } from '../../utils/Icons';
 import { getString } from '../../../STRINGS';
 import { BottomNavigation, COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
+import ImagePicker from 'react-native-image-picker';
 
 const uiTheme = {
     palette: {
@@ -45,10 +46,13 @@ interface IState {
     loading: boolean;
     data: any;
     scene: number;
+    pickedImage: any;
 }
 
 @inject('store') @observer
 class Page extends Component<IProps, IState> {
+    public camera = null ;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -56,15 +60,22 @@ class Page extends Component<IProps, IState> {
             isLoggingIn: false,
             loading: true,
             data: [],
+            pickedImage: null
         };
     }
 
     public async componentDidMount() {
         const list: any = await getUserList();
+
         this.setState({
             isLoggingIn: false,
             loading: false,
             data: list,
+        });
+        CameraRoll.getPhotos({first: 1}).then(data => {
+            this.setState({ photoSource: { uri: data.edges[3].node.image.uri }});
+        }, error => {
+            console.log(error);
         });
     }
 
@@ -78,6 +89,35 @@ class Page extends Component<IProps, IState> {
         addUser(title, content);
     }
 
+    public openGallery = () => {
+        const options = {
+            title: 'Select Avatar',
+            customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.launchImageLibrary(options, (response) => {
+            console.log(response);
+        });
+    }
+
+    public pickImageHandler = () => {
+        ImagePicker.showImagePicker({title: "Pick an Image", maxWidth: 800, maxHeight: 600}, res => {
+            if (res.didCancel) {
+                console.log("User cancelled!");
+            } else if (res.error) {
+                console.log("Error", res.error);
+            } else {
+                this.setState({
+                    pickedImage: { uri: res.uri }
+                });
+
+            }
+        });
+    }
+
     public addPost() {
         this.setState({
             isLoggingIn: false,
@@ -88,21 +128,15 @@ class Page extends Component<IProps, IState> {
     }
 
     public showAll() {
+        alert('dd');
+        console.log('dd');
         return (
             <ThemeContext.Provider value={getTheme(uiTheme)}>
                 <View style={styles.container}>
-                    <FlatList
-                        data={this.state.data}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({item}) =>
-                            <View style={styles.flatview}>
-                                <Text style={styles.name}>{item.id}</Text>
-                                <Text style={styles.name}>{item.title}</Text>
-                                <Text style={styles.content}>{item.content}</Text>
-                            </View>
-                        }
-                        keyExtractor={item => item.id}
-                    />
+                    <Image source={this.state.pickedImage}/>
+                </View>
+                <View style={styles.placeholder}>
+                    <Image source={this.state.pickedImage} style={styles.previewImage} />
                 </View>
                 <BottomNavigation style={styles.navbar}  hidden={false} >
                     <BottomNavigation.Action
@@ -122,11 +156,12 @@ class Page extends Component<IProps, IState> {
                     <BottomNavigation.Action
                     key="add"
                     icon="add"
-                    onPress={() => this.addPost() }
+                    onPress={() => this.pickImageHandler() }
                     />
                     <BottomNavigation.Action
                         key="settings"
                         icon="settings"
+                        onPress={() => this.props.navigation.navigate('NotFound') }
                     />
                     <BottomNavigation.Action
                         key="account"
@@ -139,30 +174,27 @@ class Page extends Component<IProps, IState> {
 
     public onCreate() {
         return (
-            <View style={styles.formContainer}>
-                <TextInput style={styles.input}
-                        underlineColorAndroid="transparent"
-                        placeholder="title"
-                        placeholderTextColor="#9a73ef"
-                        autoCapitalize="none"
-                        onChangeText={this.handleTitle}/>
-                <TextInput style={styles.input}
-                            underlineColorAndroid="transparent"
-                            placeholder="Content"
-                            placeholderTextColor="#9a73ef"
-                            autoCapitalize="none"
-                            onChangeText={this.handleContent}/>
+        <View style={styles.container}>
+
+            <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableOpacity
-                    style={styles.submitButton}
-                    onPress={
-                        () => this.add(this.state.title, this.state.content)
-                    }>
-                    <Text style={styles.submitButtonText}> 만들기 </Text>
+                    onPress={() => this.takePicture() }
+                    style={styles.capture}>
+                    <Text style={{ fontSize: 14 }}> SNAP </Text>
                 </TouchableOpacity>
             </View>
+        </View>
         );
+    };
 
-    }
+    public takePicture = async function() {
+        if (this.camera) {
+            const options = { quality: 0.5, base64: true };
+            const data = await this.camera.takePictureAsync(options);
+            console.log(data.uri);
+            alert(data.uri)
+        }
+    };
 
     public render() {
         switch (this.state.scene) {
@@ -182,6 +214,10 @@ const styles: any = StyleSheet.create({
         backgroundColor: colors.background,
         flexDirection: 'column',
         alignItems: 'center',
+    },
+    previewImage: {
+        width: '50%',
+        height: '50%',
     },
     formContainer: {
         paddingTop: 23,
@@ -223,6 +259,21 @@ const styles: any = StyleSheet.create({
         paddingTop: 30,
         borderRadius: 2,
     },
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    capture: {
+        flex: 0,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        padding: 15,
+        paddingHorizontal: 20,
+        alignSelf: 'center',
+        margin: 20,
+    },
+
 });
 
 export default Page;

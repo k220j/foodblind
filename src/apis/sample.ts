@@ -1,8 +1,8 @@
 const axios = require('axios');
-const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'http://34.85.101.71';
 
 export const getUserList = async () => {
-    let res: any = await fetch(`${ROOT_URL}/posts`, {
+    let res: any = await fetch(`${ROOT_URL}/receipts`, {
         method: 'GET',
         headers: new Headers({
             'Accept': 'application/json',
@@ -19,7 +19,7 @@ export const getUserList = async () => {
 
 export const addUser = async (title, content) => {
     const params = {title, content};
-    let res: any = await fetch(`${ROOT_URL}/posts`, {
+    let res: any = await fetch(`${ROOT_URL}/receipt`, {
         method: 'POST',
         headers: new Headers({
             'Accept': 'application/json',
