@@ -128,8 +128,6 @@ class Page extends Component<IProps, IState> {
     }
 
     public showAll() {
-        alert('dd');
-        console.log('dd');
         return (
             <ThemeContext.Provider value={getTheme(uiTheme)}>
                 <View style={styles.container}>
@@ -148,6 +146,7 @@ class Page extends Component<IProps, IState> {
                     imgLeftSrc={IC_MASK}
                     imgLeftStyle={styles.imgBtn}
                     text={getString('LOGIN')}
+                    onPress={() => this.props.navigation.navigate('Login') }
                     />
                     <BottomNavigation.Action
                     key="search"

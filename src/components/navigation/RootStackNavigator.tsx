@@ -1,11 +1,42 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { observer } from 'mobx-react/native';
 import { AsyncStorage } from 'react-native'
+import { Button } from 'react-native-material-ui';
+import { observer } from 'mobx-react/native';
 
 import { colors } from '../../utils/Styles';
+import appStore from '../../stores/appStore';
 import IntroScreen from '../screen/Intro';
 import NotFoundScreen from '../screen/NotFound';
+import LoginScreen from '../screen/Login';
+import RegisterScreen from '../screen/Register';
+// import Button from '../shared/Button';
+
+const initialRouteName = isLogin();
+const routeConfig = {
+  Intro: {
+    screen: IntroScreen,
+    navigationOptions: {
+      title: 'foodBlind',
+      headerRight: (
+        <Button
+          text="" 
+          // onPress={() => navigation('Login') }
+          icon='menu'
+        />
+      )
+    },
+    path: 'intro',
+  },
+  Login: {
+    screen: LoginScreen,
+    path: 'Login',
+  },
+  Register: {
+    screen: RegisterScreen,
+    path: 'Register',
+  }
+};
 
 async function isLogin() {
     const isLogin = await AsyncStorage.getItem("isLogin");
@@ -15,22 +46,6 @@ async function isLogin() {
         return 'SignUp';
     }
 }
-
-
-const initialRouteName = isLogin();
-const routeConfig = {
-  Intro: {
-    screen: IntroScreen,
-    navigationOptions: {
-      title: 'Intro',
-    },
-    path: 'intro',
-  },
-  NotFound: {
-    screen: NotFoundScreen,
-    path: 'NotFound',
-  },
-};
 
 const navigatorConfig = {
   initialRouteName: 'Intro',

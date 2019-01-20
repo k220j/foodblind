@@ -1,16 +1,30 @@
 import { observable } from 'mobx';
 
 class User {
-  @observable private _displayName: string;
+  @observable private _email: string;
+  @observable private _password: string;
   @observable private _age: number;
-  @observable private _job: string;
+  @observable private _gender: string;
+  @observable private _company: string;
 
-  public get displayName(): string {
-    return this._displayName;
+  public values() {
+    this._email;
   }
 
-  public set displayName(value: string) {
-    this._displayName = value;
+  public get email(): string {
+    return this._email;
+  }
+
+  public set email(value: string) {
+    this._email = value;
+  }
+
+  public get password(): string {
+    return this._password;
+  }
+
+  public set password(value: string) {
+    this._password = value;
   }
 
   public get age(): number {
@@ -21,13 +35,22 @@ class User {
     this._age = value;
   }
 
-  public get job(): string {
-    return this._job;
+  public get gender(): string {
+    return this._gender;
   }
 
-  public set job(value: string) {
-    this._job = value;
+  public set gender(value: string) {
+    this._gender = value;
   }
+
+  public get company(): string {
+    return this._company;
+  }
+
+  public set company(value: string) {
+    this._company = value;
+  }
+  
 }
 
 export default User;
