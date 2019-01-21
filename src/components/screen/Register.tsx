@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, Picker, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View,
+        Text,
+        TextInput,
+        StyleSheet,
+        Picker,
+        KeyboardAvoidingView,
+        TouchableOpacity,
+        Platform,
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
 
-import User from '../../models/User'
+import User from '../../models/User';
 import { signUp } from '../../apis/user';
 
 import { Button, RadioButton } from 'react-native-material-ui';
@@ -65,49 +73,58 @@ class Register extends Component<IProps, IState> {
 
     public render() {
         return(
-            <View style={{padding: 20}}>
-                <Text 
-                    style={{fontSize: 27}}>
-                    Register
-                </Text>
-                <Text style={styles.labelStyle}>Email</Text>
-                <TextInput 
-                    onChangeText={(text) => this.validate(text)}
-                    style= {styles.inputStyle}
-                    textContentType={'emailAddress'}
-                 />
-                <Text style={styles.labelStyle}>Password</Text>
-                <TextInput 
-                    secureTextEntry={true}
-                    onChangeText={(text) => this.setState({password: text})}
-                    style= {styles.inputStyle}
-                    textContentType={'password'}
-                 />
-                 <Text style={styles.labelStyle}>age</Text>
-                <TextInput 
-                    onChangeText={(text) => this.setState({age: +text})}
-                    style= {styles.inputStyle}
-                 />
-                <Text style={styles.labelStyle}>gender</Text>
-                <Picker
-                    style={{  }}
-                    mode={"dialog"}
-                    selectedValue={this.state.gender}
-                    onValueChange={(gender) => this.setState({gender})}>
-                <Picker.Item label="Male" value="M" />
-                <Picker.Item label="Female" value="F" />
-                </Picker>
-                <Text style={styles.labelStyle}>Company</Text>
-                <TextInput 
-                    onChangeText={(text) => this.setState({company: text})}
-                    style= {styles.inputStyle}
-                 />
-                <View style={{margin:7}} />
-                <Button 
-                    onPress={this.onLogin}
-                    text="Submit"
-                />
-            </View>
+            <KeyboardAvoidingView
+                style={styles.containerStyle}
+                keyboardVerticalOffset={34}
+                behavior={
+                    Platform.select({
+                    'android': null,
+                    'ios': 'padding',
+                })}>
+                <View style={{padding: 20}}>
+                    <Text
+                        style={{fontSize: 27}}>
+                        Register
+                    </Text>
+                    <Text style={styles.labelStyle}>Email</Text>
+                    <TextInput
+                        onChangeText={(text) => this.validate(text)}
+                        style= {styles.inputStyle}
+                        textContentType={'emailAddress'}
+                     />
+                    <Text style={styles.labelStyle}>Password</Text>
+                    <TextInput
+                        secureTextEntry={true}
+                        onChangeText={(text) => this.setState({password: text})}
+                        style= {styles.inputStyle}
+                        textContentType={'password'}
+                     />
+                     <Text style={styles.labelStyle}>age</Text>
+                    <TextInput
+                        onChangeText={(text) => this.setState({age: +text})}
+                        style= {styles.inputStyle}
+                     />
+                    <Text style={styles.labelStyle}>gender</Text>
+                    <Picker
+                        style={{  }}
+                        mode={"dialog"}
+                        selectedValue={this.state.gender}
+                        onValueChange={(gender) => this.setState({gender})}>
+                    <Picker.Item label="Male" value="M" />
+                    <Picker.Item label="Female" value="F" />
+                    </Picker>
+                    <Text style={styles.labelStyle}>Company</Text>
+                    <TextInput
+                        onChangeText={(text) => this.setState({company: text})}
+                        style= {styles.inputStyle}
+                     />
+                    <View style={{margin:7}} />
+                    <Button
+                        onPress={this.onLogin}
+                        text="Submit"
+                    />
+                </View>
+            </KeyboardAvoidingView>
         );
     }
 
