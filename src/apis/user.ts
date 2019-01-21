@@ -4,10 +4,10 @@ import User from '../models/User';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
 
-const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'http://13.209.52.197';
 
 export const signUp = (email: string, password: string, age: number, gender: string, company: string) => {
-    axios.post(`${ROOT_URL}/user/sign_up`, 
+    axios.post(`${ROOT_URL}/api/sign_up`, 
     {
         'email': email,
         'password': password,
@@ -26,7 +26,7 @@ export const signUp = (email: string, password: string, age: number, gender: str
 }
 
 export const signIn = (email: string, password: string, user: User) => {
-    axios.post(`${ROOT_URL}/user/sign_in`, 
+    axios.post(`${ROOT_URL}/api/sign_in`, 
     {
         'email': email,
         'password': password,
@@ -38,11 +38,11 @@ export const signIn = (email: string, password: string, user: User) => {
      })
     .then((response) => {
         console.log(response['data']);
-      user.email = response['data']['email'];
-      user.password = response['data']['password'];
-      user.age = response['data']['age'];
-      user.company = response['data']['company'];
-      user.gender = response['data']['gender'];
-      console.log(user);
+        user.email = response['data']['email'];
+        user.password = response['data']['password'];
+        user.age = response['data']['age'];
+        user.company = response['data']['company'];
+        user.gender = response['data']['gender'];
+        console.log(user);
     })
 }
