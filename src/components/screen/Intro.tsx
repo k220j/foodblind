@@ -69,6 +69,7 @@ interface IState {
 @inject('store') @observer
 class Page extends Component<IProps, IState> {
     public camera = null ;
+    public navigation = this.props.navigation;
 
     constructor(props) {
         super(props);
@@ -85,12 +86,16 @@ class Page extends Component<IProps, IState> {
         this.setState({data: test_data});
     }
 
-    public renderRow({item}) {
+    public _onPress = () => {
+        this.navigation.navigate('Login');
+    }
+
+    public renderRow = ({item}) => {
         const theme = getTheme();
         let post_item =
             <Card
                 style={theme.cardStyle}
-                onPress={() => this.props.navigator.navigate('Login') }
+                onPress={() => this.navigation.navigate("Login")}
             >
                 <ListItem
                     divider
@@ -104,18 +109,15 @@ class Page extends Component<IProps, IState> {
         return post_item;
     }
 
-    public postDetail() {
-        this.props.navigation.navigate('Login');
-    }
-
     public render() {
         return (
             <ThemeContext.Provider value={getTheme(uiTheme)}>
                 <FlatList
-                data={this.state.data}
-                showsVerticalScrollIndicator={false}
-                renderItem={this.renderRow.bind(this)}
-                keyExtractor={item => item.title}
+                    data={this.state.data}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={this.renderRow}
+                    keyExtractor={item => item.title}
+                    navigation={this.props.navigation}
                 />
                 <BottomNavigation style={styles.navbar}  hidden={false} >
                     <BottomNavigation.Action
