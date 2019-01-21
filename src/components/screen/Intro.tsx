@@ -26,6 +26,7 @@ import { BottomNavigation,
     } from 'react-native-material-ui';
 import ImagePicker from 'react-native-image-picker';
 import Post from './Post';
+import { withNavigation } from 'react-navigation';
 
 const uiTheme = {
     palette: {
@@ -87,7 +88,10 @@ class Page extends Component<IProps, IState> {
     public renderRow({item}) {
         const theme = getTheme();
         let post_item =
-            <Card style={theme.cardStyle}>
+            <Card
+                style={theme.cardStyle}
+                onPress={() => this.props.navigator.navigate('Login') }
+            >
                 <ListItem
                     divider
                     leftElement={<Avatar text="MW" />}
@@ -95,21 +99,57 @@ class Page extends Component<IProps, IState> {
                         primaryText: `${item.title}`,
                         secondaryText: `${item.content}`,
                     }}
-                    onPress={() => (console.log('click')) }
                 />
             </Card>;
         return post_item;
     }
 
+    public postDetail() {
+        this.props.navigation.navigate('Login');
+    }
 
     public render() {
         return (
-            <FlatList
-            data={this.state.data}
-            showsVerticalScrollIndicator={false}
-            renderItem={this.renderRow}
-            keyExtractor={item => item.title}
-        />);
+            <ThemeContext.Provider value={getTheme(uiTheme)}>
+                <FlatList
+                data={this.state.data}
+                showsVerticalScrollIndicator={false}
+                renderItem={this.renderRow.bind(this)}
+                keyExtractor={item => item.title}
+                />
+                <BottomNavigation style={styles.navbar}  hidden={false} >
+                    <BottomNavigation.Action
+                        key="home"
+                        icon='home'
+                        isLoading={this.state.isLoggingIn}
+                        style={styles.btnLogin}
+                        textStyle={styles.txtLogin}
+                        imgLeftSrc={IC_MASK}
+                        imgLeftStyle={styles.imgBtn}
+                        text={getString('LOGIN')}
+                        onPress={() => this.props.navigation.navigate('Login') }
+                    />
+                    <BottomNavigation.Action
+                        key="search"
+                        icon='search'
+                    />
+                    <BottomNavigation.Action
+                        key="add"
+                        icon="add"
+                        onPress={() => this.pickImageHandler() }
+                    />
+                    <BottomNavigation.Action
+                        key="settings"
+                        icon="settings"
+                        onPress={() => this.props.navigation.navigate('NotFound') }
+                    />
+                    <BottomNavigation.Action
+                        key="account"
+                        icon="favorite"
+                    />
+                </BottomNavigation>
+            </ThemeContext.Provider>
+        );
     }
 }
 
@@ -181,4 +221,4 @@ const styles: any = StyleSheet.create({
 
 });
 
-export default Page;
+export default withNavigation(Page);
