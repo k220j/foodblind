@@ -1,8 +1,7 @@
 import axios from 'axios';
 import User from '../models/User';
 
-import { observer } from 'mobx-react';
-import { inject } from 'mobx-react/native';
+import { AsyncStorage } from "react-native"
 
 const ROOT_URL = 'http://13.209.52.197';
 
@@ -25,7 +24,7 @@ export const signUp = (email: string, password: string, age: number, gender: str
     })
 }
 
-export const signIn = (email: string, password: string, user: User) => {
+export const signIn = (email: String, password: String) => {
     axios.post(`${ROOT_URL}/api/sign_in`, 
     {
         'email': email,
@@ -37,12 +36,6 @@ export const signIn = (email: string, password: string, user: User) => {
         }
      })
     .then((response) => {
-        console.log(response['data']);
-        user.email = response['data']['email'];
-        user.password = response['data']['password'];
-        user.age = response['data']['age'];
-        user.company = response['data']['company'];
-        user.gender = response['data']['gender'];
-        console.log(user);
+        AsyncStorage.setItem('@app:session', response['data']['access_token']);
     })
 }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
 
 import User from '../../models/User'
-import { signIn } from '../../apis/user'
+// import { signIn } from '../../apis/user'
 
 import { Button, BottomNavigation, COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
 
@@ -20,6 +20,7 @@ interface IState {
     scene: number;
     email: string;
     password: string;
+    token: string;
 }
 
 const styles = StyleSheet.create({
@@ -52,9 +53,22 @@ class Login extends Component<IProps, IState> {
         this.setState({
             isLoggingIn: false,
             email: '',
-            password: '',
+            password: '', 
+            token: '',
         })
+
+        this.state = {
+            isLoggingIn: false,
+        }
     }
+
+    // public componentDidMount = () => {
+    //     this.setState({isLoggingIn: true})
+
+    //     AsyncStorage.getItem('@app:session').then(token => {
+    //         this.setState({token: token});
+    //     });
+    // }
 
     public render() {
         return(
@@ -82,18 +96,19 @@ class Login extends Component<IProps, IState> {
                 <Button 
                     onPress={() => this.props.navigation.navigate('Register') }
                     text="회원가입"
-                />
-                <View>
-                    <Text>{this.props.store.user.email}</Text>
-                    <Text>{this.props.store.user.password}</Text>
-                    <Text>{this.props.store.user.company}</Text>
-                </View>
+                />  
+                <View><Text> { this.state.token } </Text></View>
             </View>
         );
     }
 
     private onLogin = () => {
-        signIn(this.state.email, this.state.password, this.props.store.user);
+        this.props.store.signIn(this.state.email, this.state.password);
+        this.setState({isLoggingIn: true})
+
+        AsyncStorage.getItem('@app:session').then(token => {
+            this.setState({token: token});
+        });
     }
 }
 
