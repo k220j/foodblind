@@ -43,7 +43,7 @@ const test_data = [
     {id: 1, title: 'hello', content: '안녕하신가?'},
     {id: 2, title: '첫번째 학생인가요?', content: '내이름이 궁금하냐'},
     {id: 3, title: '크크크', content: '테스트이다.'},
-    {id: 4, title: '내가 처음이냐?', content: '쿄쿄쿄'}
+    {id: 4, title: '내가 처음이냐?', content: '쿄쿄쿄'},
 ];
 
 export const SCENE = {
@@ -92,10 +92,13 @@ class Page extends Component<IProps, IState> {
 
     public renderRow = ({item}) => {
         const theme = getTheme();
-        let post_item =
+        return(
             <Card
                 style={theme.cardStyle}
-                onPress={() => this.navigation.navigate("Login")}
+                onPress={() => this.navigation.navigate('Post', {
+                    title: item.title,
+                    content: item.content,
+                })}
             >
                 <ListItem
                     divider
@@ -105,8 +108,7 @@ class Page extends Component<IProps, IState> {
                         secondaryText: `${item.content}`,
                     }}
                 />
-            </Card>;
-        return post_item;
+            </Card>);
     }
 
     public render() {

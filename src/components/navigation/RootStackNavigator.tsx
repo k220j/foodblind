@@ -5,14 +5,11 @@ import { Button } from 'react-native-material-ui';
 import { observer } from 'mobx-react/native';
 
 import { colors } from '../../utils/Styles';
-import appStore from '../../stores/appStore';
 import IntroScreen from '../screen/Intro';
-import NotFoundScreen from '../screen/NotFound';
 import LoginScreen from '../screen/Login';
 import RegisterScreen from '../screen/Register';
-// import Button from '../shared/Button';
+import PostScreen from '../screen/Post';
 
-const initialRouteName = isLogin();
 const routeConfig = {
   Intro: {
     screen: IntroScreen,
@@ -20,11 +17,10 @@ const routeConfig = {
       title: 'foodBlind',
       headerRight: (
         <Button
-          text="" 
-          // onPress={() => navigation('Login') }
+          text=""
           icon='menu'
         />
-      )
+      ),
     },
     path: 'intro',
   },
@@ -35,7 +31,11 @@ const routeConfig = {
   Register: {
     screen: RegisterScreen,
     path: 'Register',
-  }
+  },
+  Post: {
+    screen: PostScreen,
+    path: 'Post',
+  },
 };
 
 async function isLogin() {
@@ -65,8 +65,6 @@ const navigatorConfig = {
 };
 
 const AppStackNavigator = createStackNavigator(routeConfig, navigatorConfig);
-// const AuthStack = createStackNavigator({ SignIn: SignInScreen });
-
 interface IProps {
   navigation: any;
 }
