@@ -1,28 +1,23 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native';
 import { Button } from 'react-native-material-ui';
 import { observer } from 'mobx-react/native';
 
 import { colors } from '../../utils/Styles';
-import IntroScreen from '../screen/Intro';
+import IntroScreen from '../screen/PostList';
 import LoginScreen from '../screen/Login';
 import RegisterScreen from '../screen/Register';
-import PostScreen from '../screen/Post';
+import PostScreen from '../screen/PostDetail';
+import PostFormScreen from '../screen/PostForm';
 
 const routeConfig = {
   Intro: {
     screen: IntroScreen,
     navigationOptions: {
-      title: 'foodBlind',
-      headerRight: (
-        <Button
-          text=""
-          icon='menu'
-        />
-      ),
+      title: 'Schoolind',
     },
-    path: 'intro',
+    path: 'PostList',
   },
   Login: {
     screen: LoginScreen,
@@ -32,9 +27,13 @@ const routeConfig = {
     screen: RegisterScreen,
     path: 'Register',
   },
-  Post: {
+  PostDetail: {
     screen: PostScreen,
-    path: 'Post',
+    path: 'PostDetail',
+  },
+  PostForm: {
+      screen: PostFormScreen,
+      path: 'PostFormScreen',
   },
 };
 

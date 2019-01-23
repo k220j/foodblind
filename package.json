@@ -47,7 +47,8 @@
     "lodash": "4.17.11",
     "axios": "0.18.0",
     "react-native-camera": "1.8.0",
-    "react-native-image-picker": "0.28.0"
+    "react-native-image-picker": "0.28.0",
+    "react-native-material-textfield": "0.12.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

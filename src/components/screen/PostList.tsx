@@ -1,42 +1,35 @@
 import React, {Component} from 'react';
 import {
     StyleSheet,
-    Text,
-    View,
     FlatList,
-    TextInput,
-    TouchableOpacity,
-    CameraRoll,
-    Image,
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { inject } from 'mobx-react/native';
-import { getUserList, addUser } from '../../apis/sample';
 import { ratio, colors } from '../../utils/Styles';
 import { IC_MASK } from '../../utils/Icons';
 import { getString } from '../../../STRINGS';
 import { BottomNavigation,
-         COLOR,
-         ThemeContext,
-         getTheme,
-         Icon,
-         Card,
-         ListItem,
-         Avatar,
-    } from 'react-native-material-ui';
-import ImagePicker from 'react-native-image-picker';
+    COLOR,
+    ThemeContext,
+    getTheme,
+    Icon,
+    Card,
+    ListItem,
+    Avatar,
+} from 'react-native-material-ui';
 import Post from './Post';
+import { withNavigation } from 'react-navigation';
 
 const uiTheme = {
     palette: {
-      primaryColor: COLOR.green500,
+        primaryColor: COLOR.green500,
     },
     toolbar: {
-      container: {
-        height: 50,
-      },
+        container: {
+            height: 50,
+        },
     },
-  };
+};
 
 const test_data = [
     { id: 1, title: 'hello', content: '안녕하신가?', school: '한성고등학교', created_at: '2018-12-20', like: 5, comment: 5 },
@@ -94,10 +87,11 @@ class Page extends Component<IProps, IState> {
         return(
             <Card
                 style={theme.cardStyle}
-                onPress={() => this.navigation.navigate('Post', {
-                    title: item.title,
-                    content: item.content,
-                })}
+                onPress={() =>
+                    this.navigation.navigate('PostDetail', {
+                                        title: item.title,
+                                        content: item.content,
+                                    })}
             >
                 <ListItem
                     leftElement={<Avatar text="MW" />}
@@ -139,7 +133,9 @@ class Page extends Component<IProps, IState> {
                     <BottomNavigation.Action
                         key="add"
                         icon="add"
-                        onPress={() => this.props.navigation.navigate('PostForm') }
+                        onPress={() => this.props.navigation.navigate('PostForm', {
+                            navigation: this.navigation,
+                        }) }
                     />
                     <BottomNavigation.Action
                         key="settings"
