@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import {
     getTheme,
     Card,
@@ -14,8 +13,8 @@ import {
     View,
     ScrollView,
 } from 'react-native';
-import { getString } from '../../../STRINGS';
-import { ratio, colors } from '../../utils/Styles';
+import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 
 const styles = StyleSheet.create({
     inputStyle:{
@@ -26,44 +25,49 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.5,
         fontFamily: 'System',
     },
-    labelStyle:{
+    labelStyle: {
         fontSize: 18,
         color: '#737373',
         paddingBottom: 10,
         fontFamily: 'System',
         position: 'relative',
     },
-    containerStyle:{
+    containerStyle: {
         flexDirection: 'column',
         marginTop: 10,
         marginBottom: 10,
-    }
+    },
 });
 
+@observer
 class Screen extends Component<any, any> {
+  @observable private title = ''
+  @observable private content = ''
+
   constructor(props) {
     super(props);
     this.state = {
       editable: false,
-      title: '',
-      content: '',
     };
   }
 
+  public submitPost() {
+      this.props.navigation.goBack();
+  }
+
   public render() {
-      const { navigation } = this.props;
-      let { title, content } = this.state;
+      const { title, content } = this.state;
       const theme = getTheme();
       return (
           <ScrollView
               style={styles.containerStyle}
-              contentContainerStyle={styles.scrollViewContainer}
+              contentContainerStyle={styles.containerStyle}
           >
               <Card style={theme.cardStyle}>
                   <TextField
                       label='제목'
                       value={title}
-                      onChangeText={ (title) => this.setState({ title }) }
+                      onChangeText={ (title) => this.title = title }
                   />
                   <TextField
                       style={{height: 40}}
@@ -71,16 +75,13 @@ class Screen extends Component<any, any> {
                       multiline={true}
                       value={content}
                       umberOfLines={24}
-                      onChangeText={ (content) => this.setState({ content }) }
+                      onChangeText={ (content) => this.content = content }
                   />
                   <View>
                       <Button
                           primary
                           text="저장하기"
-                          onPress={() => navigation.navigate("PostDetail",{
-                              title: this.state.title,
-                              content: this.state.content,
-                          })}
+                          onPress={() => this.submitPost()}
                       >
                       </Button>
                   </View>
